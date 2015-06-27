@@ -39,7 +39,7 @@ LibSVMMachineLearningModel<TInputValue,TOutputValue>
   m_C = 1.0;
   // m_Epsilon = 1e-6;
   m_ParameterOptimization = false;
-  m_DoProbabilityEstimates = false;
+  m_DoProbabilityEstimates = true;
   m_SVMestimator = SVMEstimatorType::New();
 }
 
@@ -92,6 +92,22 @@ LibSVMMachineLearningModel<TInputValue,TOutputValue>
 
   return target;
 }
+
+
+template <class TInputValue, class TOutputValue>
+typename LibSVMMachineLearningModel<TInputValue,TOutputValue>
+::ProbabilitiesVectorType
+LibSVMMachineLearningModel<TInputValue,TOutputValue>
+::GetProbability(const InputSampleType & input) const
+{
+  ProbabilitiesVectorType proba;
+
+  MeasurementVectorFunctorType mfunctor;
+  proba = m_SVMestimator->GetModel()->EvaluateProbabilities(mfunctor(input));
+    
+  return proba;
+}
+
 
 template <class TInputValue, class TOutputValue>
 void

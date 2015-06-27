@@ -96,7 +96,12 @@ public:
 
   /** Predict values using the model */
   virtual TargetSampleType Predict(const InputSampleType& input) const = 0;
-
+  
+  /** compute probability values using the model */
+  typedef itk::VariableLengthVector<TargetValueType>     ProbabilitiesVectorType;
+  virtual ProbabilitiesVectorType GetProbability(const InputSampleType& input) const;
+  
+  
   /** Classify all samples in InputListSample and fill TargetListSample with the associated label */
   void PredictAll();
 
