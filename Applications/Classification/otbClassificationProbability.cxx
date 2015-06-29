@@ -27,6 +27,11 @@
 #include "otbImageToVectorImageCastFilter.h"
 #include "otbMachineLearningModelFactory.h"
 
+
+#include "otbImageListToVectorImageFilter.h"
+#include "otbMultiToMonoChannelExtractROI.h"
+#include "otbImageList.h"
+
 namespace otb
 {
 namespace Wrapper
@@ -47,8 +52,9 @@ public:
   itkTypeMacro(ClassificationProbability, otb::Application);
 
   /** Filters typedef  */
+    
   typedef FloatVectorImageType                                                                 InputImageType;
-  typedef DoubleImageType                                                                       OutputImageType;
+  typedef FloatImageType                                                                       OutputImageType;
   typedef UInt8ImageType                                                                       MaskImageType;
   typedef otb::ClassificationProbabilityFilter<InputImageType, OutputImageType, MaskImageType> ClassificationProbabilityFilterType;
   typedef ClassificationProbabilityFilterType::Pointer                                                    ClassificationFilterPointerType;
@@ -57,7 +63,11 @@ public:
   typedef ClassificationProbabilityFilterType::ValueType                                                  ValueType;
   typedef ClassificationProbabilityFilterType::ProbaType                                                  ProbaType;
   typedef otb::MachineLearningModelFactory<ValueType, ProbaType>                               MachineLearningModelFactoryType;
-
+ 
+  typedef otb::ImageList<OutputImageType>  ImageListType;
+  typedef ImageListToVectorImageFilter<ImageListType,
+                                       FloatVectorImageType >                   ListConcatenerFilterType;
+    
 private:
   void DoInit()
   {
@@ -97,7 +107,9 @@ private:
 
   void DoUpdateParameters()
   {
-    // Nothing to do here : all parameters are independent
+    // Reinitialize the object
+    m_Concatener = ListConcatenerFilterType::New();
+    m_ImageList = ImageListType::New();
   }
 
   void DoExecute()
@@ -135,11 +147,23 @@ private:
       m_ClassificationProbabilityFilter->SetInputMask(inMask);
       }
 
-    SetParameterOutputImage<OutputImageType>("out", m_ClassificationProbabilityFilter->GetOutput() );
+      ///////////////////////////////////////////////////////////
+      
+    m_ImageList->PushBack(  m_ClassificationProbabilityFilter->GetOutput() );
+    m_ImageList->PushBack(  m_ClassificationProbabilityFilter->GetOutput() );
+
+    m_Concatener->SetInput( m_ImageList );
+
+    SetParameterOutputImage("out", m_Concatener->GetOutput());
+  
+   // SetParameterOutputImage<OutputImageType>("out", m_ClassificationProbabilityFilter->GetOutput() );
   }
 
   ClassificationProbabilityFilterType::Pointer m_ClassificationProbabilityFilter;
   ModelPointerType m_Model;
+  
+  ListConcatenerFilterType::Pointer  m_Concatener;
+  ImageListType::Pointer        m_ImageList;
 };
 
 

@@ -112,7 +112,7 @@ ImageClassificationFilter<TInputImage, TOutputImage, TMaskImage>
     if (validPoint)
       {
       // Classifify
-      outIt.Set(m_Model->Predict(inIt.Get())[0]);
+      outIt.Set( m_Model->Predict(inIt.Get())[0] );
       }
     else
       {

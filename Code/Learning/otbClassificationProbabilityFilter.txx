@@ -35,6 +35,7 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
   this->SetNumberOfIndexedInputs(2);
   this->SetNumberOfRequiredInputs(1);
   m_DefaultProba = itk::NumericTraits<ProbaType>::ZeroValue();
+  classIndex = 0 ;
 }
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
@@ -112,8 +113,15 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
       // If point is valid
       if (validPoint)
 	{
-	// Probability
- 	 outIt.Set( 100.0*m_Model->GetProbability( inIt.Get() )[0] ); //FIXME something wrong here
+	 
+	 // suppose we have two class 1 and 2 
+	 // m_Model->Predict(inIt.Get())[0]  will return predicted class number (1 or 2)
+	 // m_Model->GetProbability( inIt.Get() )  will return a vector contains classes probabilities
+	 // example [0.25, 0.75] 
+	 // 0.25 : probability of 1
+	 // 0.75 : probability of 2
+	  
+ 	 outIt.Set( 100.0*m_Model->GetProbability( inIt.Get() )[classIndex] );
 	}
       else
 	{
@@ -134,5 +142,14 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 {
   Superclass::PrintSelf(os, indent);
 }
+
+template <class TInputImage, class TOutputImage, class TMaskImage>
+void
+ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
+::SetClassIndex(const int idx)
+{
+   classIndex = idx;
+}
+
 } // End namespace otb
 #endif

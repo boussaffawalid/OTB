@@ -100,6 +100,8 @@ protected:
   /**PrintSelf method */
   virtual void PrintSelf(std::ostream& os, itk::Indent indent) const;
 
+  void SetClassIndex(const int idx);
+  
 private:
   ClassificationProbabilityFilter(const Self &); //purposely not implemented
   void operator =(const Self&); //purposely not implemented
@@ -108,6 +110,7 @@ private:
   ModelPointerType m_Model;
   /** Default probabilities for invalid pixels (when using a mask) */
   ProbaType m_DefaultProba;
+  int classIndex;
 
 };
 } // End namespace otb
