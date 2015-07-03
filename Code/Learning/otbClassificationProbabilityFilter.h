@@ -61,7 +61,7 @@ public:
   typedef TOutputImage                         OutputImageType;
   typedef typename OutputImageType::Pointer    OutputImagePointerType;
   typedef typename OutputImageType::RegionType OutputImageRegionType;
-  typedef typename OutputImageType::PixelType  ProbaType;
+  typedef typename OutputImageType::InternalPixelType  ProbaType;
 
   typedef MachineLearningModel<ValueType, ProbaType> ModelType;
   typedef typename ModelType::Pointer    ModelPointerType;
@@ -71,8 +71,8 @@ public:
   itkGetObjectMacro(Model, ModelType);
 
   /** Set/Get the default label */
-  itkSetMacro(DefaultProba, ProbaType);
-  itkGetMacro(DefaultProba, ProbaType);
+  itkSetMacro(DefaultProba, typename TOutputImage::PixelType);
+  itkGetMacro(DefaultProba, typename TOutputImage::PixelType);
 
   /**
    * If set, only pixels within the mask will be classified.
@@ -87,6 +87,8 @@ public:
    */
   const MaskImageType * GetInputMask(void);
 
+  void SetClassSize(const int size);
+  
 protected:
   /** Constructor */
   ClassificationProbabilityFilter();
@@ -100,7 +102,12 @@ protected:
   /**PrintSelf method */
   virtual void PrintSelf(std::ostream& os, itk::Indent indent) const;
 
-  void SetClassIndex(const int idx);
+  /** GenerateOutputInformation
+   * Set the number of bands of the output.
+   * Copy informations from the first image of the list if existing.
+   **/
+  virtual void GenerateOutputInformation(void);
+  
   
 private:
   ClassificationProbabilityFilter(const Self &); //purposely not implemented
@@ -109,8 +116,9 @@ private:
   /** The model used for classification */
   ModelPointerType m_Model;
   /** Default probabilities for invalid pixels (when using a mask) */
-  ProbaType m_DefaultProba;
-  int classIndex;
+  typename TOutputImage::PixelType m_DefaultProba;
+  
+  int m_classSize;
 
 };
 } // End namespace otb

@@ -32,6 +32,8 @@
 #include "otbMultiToMonoChannelExtractROI.h"
 #include "otbImageList.h"
 
+#include "otbListSampleGenerator.h"
+
 namespace otb
 {
 namespace Wrapper
@@ -54,8 +56,9 @@ public:
   /** Filters typedef  */
     
   typedef FloatVectorImageType                                                                 InputImageType;
-  typedef FloatImageType                                                                       OutputImageType;
+  typedef FloatVectorImageType                                                                 OutputImageType;
   typedef UInt8ImageType                                                                       MaskImageType;
+  
   typedef otb::ClassificationProbabilityFilter<InputImageType, OutputImageType, MaskImageType> ClassificationProbabilityFilterType;
   typedef ClassificationProbabilityFilterType::Pointer                                                    ClassificationFilterPointerType;
   typedef ClassificationProbabilityFilterType::ModelType                                                  ModelType;
@@ -64,9 +67,7 @@ public:
   typedef ClassificationProbabilityFilterType::ProbaType                                                  ProbaType;
   typedef otb::MachineLearningModelFactory<ValueType, ProbaType>                               MachineLearningModelFactoryType;
  
-  typedef otb::ImageList<OutputImageType>  ImageListType;
-  typedef ImageListToVectorImageFilter<ImageListType,
-                                       FloatVectorImageType >                   ListConcatenerFilterType;
+  typedef otb::ListSampleGenerator<FloatVectorImageType, VectorDataType> ListSampleGeneratorType;
     
 private:
   void DoInit()
@@ -90,6 +91,13 @@ private:
     SetParameterDescription( "mask", "The mask allows to restrict Probability computation of the input image to the area where mask pixel values are greater than 0.");
     MandatoryOff("mask");
 
+    AddParameter(ParameterType_InputVectorDataList,  "vd",   "Input vector dataset");
+    SetParameterDescription( "vd", "The input vector" );
+    
+    AddParameter(ParameterType_String, "field", "Name of the discrimination field");
+    SetParameterDescription("field", "Name of the field used to discriminate class labels in the input vector data files.");
+    SetParameterString("field", "Class");
+  
     AddParameter(ParameterType_InputFilename, "model", "Model file");
     SetParameterDescription("model", "A model file (produced by TrainImagesClassifier application, maximal class label = 65535).");
 
@@ -100,16 +108,16 @@ private:
     AddRAMParameter();
 
    // Doc example parameter settings
-    SetDocExampleParameterValue("in", "QB_1_ortho.tif");
-    SetDocExampleParameterValue("model", "clsvmModelQB1.svm");
+    SetDocExampleParameterValue("in", "image.tif");
+    SetDocExampleParameterValue("model", "model.svm");
+    SetDocExampleParameterValue("vd", "shapefile.shp");
     SetDocExampleParameterValue("out", "ProbabilitiesImage.tif");
   }
 
   void DoUpdateParameters()
   {
-    // Reinitialize the object
-    m_Concatener = ListConcatenerFilterType::New();
-    m_ImageList = ImageListType::New();
+
+    
   }
 
   void DoExecute()
@@ -118,6 +126,24 @@ private:
     InputImageType::Pointer inImage = GetParameterImage("in");
     inImage->UpdateOutputInformation();
 
+    
+    VectorDataListType* vectorDataList = GetParameterVectorDataList("vd");
+    
+    // read the Vectordata
+    VectorDataType::Pointer vectorData = vectorDataList->GetNthElement(0);
+    vectorData->Update();
+ 
+    //Sample list generator
+    ListSampleGeneratorType::Pointer sampleGenerator = ListSampleGeneratorType::New();
+
+    sampleGenerator->SetInput(inImage);
+    sampleGenerator->SetInputVectorData(vectorData);
+    sampleGenerator->SetClassKey(GetParameterString("field"));
+    sampleGenerator->Update();
+    
+    int classSize = sampleGenerator->GetClassesSize().size() ;
+    
+        
     // Load svm model
     otbAppLogINFO("Loading model");
     m_Model = MachineLearningModelFactoryType::CreateMachineLearningModel(GetParameterString("model"),
@@ -135,7 +161,7 @@ private:
     // m_Classification Probability 
     m_ClassificationProbabilityFilter = ClassificationProbabilityFilterType::New();
     m_ClassificationProbabilityFilter->SetModel(m_Model);
-
+    m_ClassificationProbabilityFilter->SetClassSize(classSize);
     m_ClassificationProbabilityFilter->SetInput(inImage);
 
     if(IsParameterEnabled("mask"))
@@ -147,23 +173,13 @@ private:
       m_ClassificationProbabilityFilter->SetInputMask(inMask);
       }
 
-      ///////////////////////////////////////////////////////////
-      
-    m_ImageList->PushBack(  m_ClassificationProbabilityFilter->GetOutput() );
-    m_ImageList->PushBack(  m_ClassificationProbabilityFilter->GetOutput() );
-
-    m_Concatener->SetInput( m_ImageList );
-
-    SetParameterOutputImage("out", m_Concatener->GetOutput());
   
-   // SetParameterOutputImage<OutputImageType>("out", m_ClassificationProbabilityFilter->GetOutput() );
+    SetParameterOutputImage<OutputImageType>("out", m_ClassificationProbabilityFilter->GetOutput() );
   }
 
   ClassificationProbabilityFilterType::Pointer m_ClassificationProbabilityFilter;
   ModelPointerType m_Model;
   
-  ListConcatenerFilterType::Pointer  m_Concatener;
-  ImageListType::Pointer        m_ImageList;
 };
 
 

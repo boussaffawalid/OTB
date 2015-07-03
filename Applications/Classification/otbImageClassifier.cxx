@@ -169,7 +169,7 @@ private:
 
       m_ClassificationFilter->SetInputMask(inMask);
       }
-
+    
     SetParameterOutputImage<OutputImageType>("out", m_ClassificationFilter->GetOutput());
   }
 

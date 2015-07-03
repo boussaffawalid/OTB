@@ -34,8 +34,6 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 {
   this->SetNumberOfIndexedInputs(2);
   this->SetNumberOfRequiredInputs(1);
-  m_DefaultProba = itk::NumericTraits<ProbaType>::ZeroValue();
-  classIndex = 0 ;
 }
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
@@ -73,6 +71,18 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
 ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
+::GenerateOutputInformation()
+{
+    Superclass::GenerateOutputInformation();
+    this->GetOutput()->SetNumberOfComponentsPerPixel( m_classSize );
+ 
+	  for(int i(0); i< m_classSize; ++i)
+	    m_DefaultProba[i] = 0;
+}
+
+template <class TInputImage, class TOutputImage, class TMaskImage>
+void
+ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, itk::ThreadIdType threadId)
 {
   // Get the input pointers
@@ -104,6 +114,9 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
   // Walk the part of the image
   for (inIt.GoToBegin(), outIt.GoToBegin(); !inIt.IsAtEnd() && !outIt.IsAtEnd(); ++inIt, ++outIt)
     {
+          typename TOutputImage::PixelType outPix;
+	  outPix.SetSize(m_classSize);
+      
       // Check pixel validity
       if (inputMaskPtr)
 	{
@@ -121,11 +134,14 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 	 // 0.25 : probability of 1
 	 // 0.75 : probability of 2
 	  
- 	 outIt.Set( 100.0*m_Model->GetProbability( inIt.Get() )[classIndex] );
+	  outPix = m_Model->GetProbability( inIt.Get() );
+	  for(int i(0); i< m_classSize; ++i)
+	    outPix[i] = outPix[i]*100.0;
+	  
+ 	  outIt.Set( outPix );
 	}
       else
 	{
-	  // else, set default value
 	  outIt.Set(m_DefaultProba);
 	}
       progress.CompletedPixel();
@@ -146,9 +162,9 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
 ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
-::SetClassIndex(const int idx)
+::SetClassSize(const int size)
 {
-   classIndex = idx;
+   m_classSize = size;
 }
 
 } // End namespace otb

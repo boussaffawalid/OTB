@@ -17,6 +17,7 @@
 
 #include "otbTrainImagesClassifier.h"
 
+
 namespace otb
 {
 namespace Wrapper
@@ -233,6 +234,7 @@ void TrainImagesClassifier::Classify(ListSampleType::Pointer validationListSampl
 void TrainImagesClassifier::DoExecute()
 {
   GetLogger()->Debug("Entering DoExecute\n");
+  
   //Create training and validation for list samples and label list samples
   ConcatenateLabelListSampleFilterType::Pointer concatenateTrainingLabels =
     ConcatenateLabelListSampleFilterType::New();
@@ -297,6 +299,9 @@ void TrainImagesClassifier::DoExecute()
       }
 
     sampleGenerator->Update();
+    
+    std::cout<< "class size "<<sampleGenerator->GetClassesSize().size() << std::endl;
+
 
     //Concatenate training and validation samples from the image
     concatenateTrainingLabels->AddInput(sampleGenerator->GetTrainingListLabel());
