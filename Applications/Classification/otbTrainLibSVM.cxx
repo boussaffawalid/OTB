@@ -49,6 +49,7 @@ namespace Wrapper
     LibSVMType::Pointer libSVMClassifier = LibSVMType::New();
     libSVMClassifier->SetInputListSample(trainingListSample);
     libSVMClassifier->SetTargetListSample(trainingLabeledListSample);
+    libSVMClassifier->SetDoProbabilityEstimates(true);
     //SVM Option
     //TODO : Add other options ?
     if (IsParameterEnabled("classifier.libsvm.opt"))

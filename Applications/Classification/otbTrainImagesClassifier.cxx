@@ -297,6 +297,9 @@ void TrainImagesClassifier::DoExecute()
       }
 
     sampleGenerator->Update();
+    
+   otbAppLogINFO("Number of classes: " <<sampleGenerator->GetClassesSize().size() );
+
 
     //Concatenate training and validation samples from the image
     concatenateTrainingLabels->AddInput(sampleGenerator->GetTrainingListLabel());
@@ -434,6 +437,7 @@ void TrainImagesClassifier::DoExecute()
     }
 #endif
 
+   otbAppLogINFO("Performances estimation");
   //--------------------------
   // Performances estimation
   //--------------------------

@@ -64,6 +64,8 @@ LibSVMMachineLearningModel<TInputValue,TOutputValue>
   // params.term_crit   = cvTermCriteria(m_TermCriteriaType, m_MaxIter, m_Epsilon);
 
   // // Train the SVM
+  std::cout <<"DoProbabilityEstimates : " << (int)m_DoProbabilityEstimates << std::endl;
+
 
   m_SVMestimator->SetC(m_C);
   m_SVMestimator->SetKernelType(m_KernelType);
