@@ -49,6 +49,7 @@ MachineLearningModel<TInputValue,TOutputValue>
     }
 }
 
+
 template <class TInputValue, class TOutputValue>
 void
 MachineLearningModel<TInputValue,TOutputValue>
@@ -57,6 +58,36 @@ MachineLearningModel<TInputValue,TOutputValue>
   // Call superclass implementation
   Superclass::PrintSelf(os,indent);
 }
+
+template <class TInputValue, class TOutputValue>
+void
+MachineLearningModel<TInputValue,TOutputValue>
+::SetNumberOfClasses(const int number) 
+{
+  m_nbclass = number ;
+}
+
+template <class TInputValue, class TOutputValue>
+int
+MachineLearningModel<TInputValue,TOutputValue>
+::GetNumberOfClasses() const 
+{
+  return m_nbclass;
+}
+
+  
+template <class TInputValue, class TOutputValue>
+typename MachineLearningModel<TInputValue,TOutputValue>
+::ProbabilitiesVectorType
+MachineLearningModel<TInputValue,TOutputValue>
+::GetProbability(const InputSampleType& input) const
+{
+  ProbabilitiesVectorType proba(m_nbclass);
+  //proba.Fill(0);
+  //TODO set proba element to 0
+  return proba;
+}
+
 }
 
 #endif

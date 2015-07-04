@@ -67,6 +67,11 @@ public:
   /** Predict values using the model */
   virtual TargetSampleType Predict(const InputSampleType & input) const;
 
+  /** Predict probability**/
+  typedef typename MachineLearningModel <TInputValue, TTargetValue>::ProbabilitiesVectorType     ProbabilitiesVectorType;
+  virtual ProbabilitiesVectorType GetProbability(const InputSampleType & input) const;
+
+  
   /** Save the model to file */
   virtual void Save(const std::string &filename, const std::string & name="");
 

@@ -96,7 +96,14 @@ public:
 
   /** Predict values using the model */
   virtual TargetSampleType Predict(const InputSampleType& input) const = 0;
-
+  
+  /** compute probabilities values using the model */
+  typedef itk::VariableLengthVector<TargetValueType>     ProbabilitiesVectorType;
+  virtual ProbabilitiesVectorType GetProbability(const InputSampleType& input) const;
+  
+  void SetNumberOfClasses(const int number);
+  int  GetNumberOfClasses() const;
+  
   /** Classify all samples in InputListSample and fill TargetListSample with the associated label */
   void PredictAll();
 
@@ -148,9 +155,12 @@ protected:
   /** Target list sample */
   typename TargetListSampleType::Pointer m_TargetListSample;
 
+   
+   
 private:
   MachineLearningModel(const Self &); //purposely not implemented
   void operator =(const Self&); //purposely not implemented
+   int m_nbclass;
 };
 } // end namespace otb
 
