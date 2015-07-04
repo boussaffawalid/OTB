@@ -49,20 +49,6 @@ MachineLearningModel<TInputValue,TOutputValue>
     }
 }
 
-
-template <class TInputValue, class TOutputValue>
-typename MachineLearningModel<TInputValue,TOutputValue>
-::ProbabilitiesVectorType
-MachineLearningModel<TInputValue,TOutputValue>
-::GetProbability(const InputSampleType & input) const
-{
-  
-  ProbabilitiesVectorType proba = itk::VariableLengthVector<double>(1) ;
-  
-  return proba;
-}
-
-
 template <class TInputValue, class TOutputValue>
 void
 MachineLearningModel<TInputValue,TOutputValue>

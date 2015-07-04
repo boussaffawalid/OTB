@@ -23,37 +23,7 @@
 #include "otbMachineLearningModel.h"
 #include "itkVariableSizeMatrix.h"
 
-//class CvRTrees;
-
-class CvRTreesMultiClass : public CvRTrees
-{
-public:
-    int predict_multi_class( const cv::Mat& sample, cv::AutoBuffer<int>& out_votes, const cv::Mat& missing = cv::Mat()) const
-    {    
-        int result = 0;
-	int max_nvotes = 0;
-	int* votes = out_votes;
-	memset( votes, 0, sizeof(*votes)*nclasses );
-	
-	for( int k = 0; k < ntrees; k++ )
-	{
-	  CvDTreeNode* predicted_node = trees[k]->predict( sample, missing );
-	  int nvotes;
-	  int class_idx = predicted_node->class_idx;
-	  CV_Assert( 0 <= class_idx && class_idx < nclasses );
-
-	  nvotes = ++votes[class_idx];
-	}
-	result = ntrees;
-      
-      return result;
-    }
-    
-    int get_nclasses(){return nclasses;}
-};
-
-
-
+class CvRTrees;
 
 namespace otb
 {
@@ -94,10 +64,6 @@ public:
 
   /** Predict values using the model */
   virtual TargetSampleType Predict(const InputSampleType & input) const;
-  
-  /** Predict probability**/
-  typedef itk::VariableLengthVector<TargetValueType>     ProbabilitiesVectorType;
-  virtual ProbabilitiesVectorType GetProbability(const InputSampleType & input) const;
 
   /** Save the model to file */
   virtual void Save(const std::string & filename, const std::string & name="");
@@ -224,8 +190,7 @@ private:
   RandomForestsMachineLearningModel(const Self &); //purposely not implemented
   void operator =(const Self&); //purposely not implemented
 
-  //CvRTrees * m_RFModel;
-  CvRTreesMultiClass * m_RFModel;
+  CvRTrees * m_RFModel;
   int m_MaxDepth;
   int m_MinSampleCount;
   float m_RegressionAccuracy;

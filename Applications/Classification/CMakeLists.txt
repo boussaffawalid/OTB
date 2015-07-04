@@ -51,10 +51,3 @@ OTB_CREATE_APPLICATION(NAME         TrainOGRLayersClassifier
 OTB_CREATE_APPLICATION(NAME         OGRLayerClassifier
                        SOURCES      otbOGRLayerClassifier.cxx
                        LINK_LIBRARIES OTBIO;OTBCommon;OTBBasicFilters;OTBFeatureExtraction;OTBLearning)
-
-OTB_CREATE_APPLICATION(NAME         ClassificationProbability
-                       SOURCES      otbClassificationProbability.cxx
-                       LINK_LIBRARIES OTBIO;OTBCommon;OTBBasicFilters;OTBFeatureExtraction;OTBLearning)
-                       
-                       
-                       

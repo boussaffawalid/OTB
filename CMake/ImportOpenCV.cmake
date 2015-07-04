@@ -1,6 +1,6 @@
 message(STATUS "Importing OpenCV...")
 
-option(OTB_USE_OPENCV "Use OpenCV library for classification." ON)
+option(OTB_USE_OPENCV "Use OpenCV library for classification." OFF)
 mark_as_advanced(OTB_USE_OPENCV)
 
 if(OTB_USE_OPENCV)
