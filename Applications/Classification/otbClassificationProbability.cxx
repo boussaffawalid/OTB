@@ -142,7 +142,7 @@ private:
     sampleGenerator->Update();
     
     int classSize = sampleGenerator->GetClassesSize().size() ;
-    
+    otbAppLogINFO("number of class : " << classSize);
         
     // Load svm model
     otbAppLogINFO("Loading model");

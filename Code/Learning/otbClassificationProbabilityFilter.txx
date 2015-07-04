@@ -85,6 +85,8 @@ void
 ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, itk::ThreadIdType threadId)
 {
+   std::cout<< "start  ThreadedGenerateData"<< std::endl;
+   
   // Get the input pointers
   InputImageConstPointerType inputPtr     = this->GetInput();
   MaskImageConstPointerType  inputMaskPtr  = this->GetInputMask();
@@ -134,11 +136,13 @@ ClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 	 // 0.25 : probability of 1
 	 // 0.75 : probability of 2
 	  
-	  outPix = m_Model->GetProbability( inIt.Get() );
-	  for(int i(0); i< m_classSize; ++i)
-	    outPix[i] = outPix[i]*100.0;
+//	  std::cout<< "proba " << m_Model->GetProbability( inIt.Get() )  << std::endl;
 	  
- 	  outIt.Set( outPix );
+//	  outPix = m_Model->GetProbability( inIt.Get() );
+//	  for(int i(0); i< m_classSize; ++i)
+//	    outPix[i] = outPix[i]*100.0;
+	  
+ 	  outIt.Set( m_DefaultProba );
 	}
       else
 	{
