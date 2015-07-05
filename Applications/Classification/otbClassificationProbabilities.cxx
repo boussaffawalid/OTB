@@ -27,6 +27,9 @@
 #include "otbImageToVectorImageCastFilter.h"
 #include "otbMachineLearningModelFactory.h"
 
+#include "otbListSampleGenerator.h"
+
+
 namespace otb
 {
 namespace Wrapper
@@ -63,6 +66,8 @@ public:
     typedef ClassificationFilterType::ProbabilityType                                                  ProbabilityType;
     typedef otb::MachineLearningModelFactory<ValueType, ProbabilityType>                               MachineLearningModelFactoryType;
 
+    typedef otb::ListSampleGenerator<FloatVectorImageType, VectorDataType> ListSampleGeneratorType;
+
 private:
   void DoInit()
   {
@@ -81,9 +86,13 @@ private:
         AddParameter ( ParameterType_InputImage, "in",  "Input Image" );
         SetParameterDescription ( "in", "The input image to classify." );
 
-	AddParameter ( ParameterType_Int, "nb",  "number of class" );
-        SetParameterDescription ( "nb", "number of class." );
-	
+	AddParameter(ParameterType_InputVectorDataList,  "vd",   "Input vector dataset");
+	SetParameterDescription( "vd", "The input vector" );
+
+	AddParameter(ParameterType_String, "field", "Name of the discrimination field");
+	SetParameterDescription("field", "Name of the field used to discriminate class labels in the input vector data files.");
+	SetParameterString("field", "Class");
+    
 	AddParameter(ParameterType_InputImage,  "mask",   "Input Mask");
 	SetParameterDescription( "mask", "The mask allows to restrict Probabilities computation of the input image\
 				to the area where mask pixel values are greater than 0.");
@@ -116,6 +125,25 @@ private:
         FloatVectorImageType::Pointer inImage = GetParameterImage ( "in" );
         inImage->UpdateOutputInformation();
 
+	
+	VectorDataListType* vectorDataList = GetParameterVectorDataList("vd");
+	
+	// read the Vectordata
+	VectorDataType::Pointer vectorData = vectorDataList->GetNthElement(0);
+	vectorData->Update();
+	
+	//Sample list generator
+	ListSampleGeneratorType::Pointer sampleGenerator = ListSampleGeneratorType::New();
+	
+	sampleGenerator->SetInput(inImage);
+	sampleGenerator->SetInputVectorData(vectorData);
+	sampleGenerator->SetClassKey(GetParameterString("field"));
+	sampleGenerator->Update();
+
+	int classSize = sampleGenerator->GetClassesSize().size() ;
+	otbAppLogINFO("number of class : " << classSize);
+
+    
         // Load svm model
         otbAppLogINFO ( "Loading model" );
         m_Model = MachineLearningModelFactoryType::CreateMachineLearningModel ( GetParameterString ( "model" ),
@@ -130,13 +158,13 @@ private:
         otbAppLogINFO ( "Model loaded" );
 
 	
-	m_Model->SetNumberOfClasses(GetParameterInt("nb"));
-        // Classify
+	m_Model->SetNumberOfClasses( classSize );
+        // Compute probabilities
         m_ClassificationProbabilities = ClassificationFilterType::New();
         m_ClassificationProbabilities->SetModel ( m_Model );
 
-            otbAppLogINFO ( "Input image normalization deactivated." );
-            m_ClassificationProbabilities->SetInput ( inImage );
+        otbAppLogINFO ( "Input image normalization deactivated." );
+        m_ClassificationProbabilities->SetInput ( inImage );
 
 	    
         if ( IsParameterEnabled ( "mask" ) )
