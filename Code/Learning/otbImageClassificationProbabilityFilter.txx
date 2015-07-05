@@ -18,10 +18,10 @@
  =========================================================================*/
 
 
-#ifndef __otbImageClassificationProbabilitiesFilter_txx
-#define __otbImageClassificationProbabilitiesFilter_txx
+#ifndef __otbImageClassificationProbabilityFilter_txx
+#define __otbImageClassificationProbabilityFilter_txx
 
-#include "otbImageClassificationProbabilitiesFilter.h"
+#include "otbImageClassificationProbabilityFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkProgressReporter.h"
 
@@ -31,8 +31,8 @@ namespace otb
  * Constructor
  */
 template <class TInputImage, class TOutputImage, class TMaskImage>
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
-::ImageClassificationProbabilitiesFilter()
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
+::ImageClassificationProbabilityFilter()
 {
   this->SetNumberOfIndexedInputs(2);
   this->SetNumberOfRequiredInputs(1);  
@@ -40,16 +40,16 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::SetInputMask(const MaskImageType * mask)
 {
   this->itk::ProcessObject::SetNthInput(1, const_cast<MaskImageType *>(mask));
 }
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
-const typename ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+const typename ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::MaskImageType *
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::GetInputMask()
 {
   if (this->GetNumberOfInputs() < 2)
@@ -62,7 +62,7 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::GenerateOutputInformation()
 {
     Superclass::GenerateOutputInformation();
@@ -79,7 +79,7 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::BeforeThreadedGenerateData()
 {
   if (!m_Model)
@@ -90,7 +90,7 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
 
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, itk::ThreadIdType threadId)
 {
   // Get the input pointers
@@ -150,7 +150,7 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
  */
 template <class TInputImage, class TOutputImage, class TMaskImage>
 void
-ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
+ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 ::PrintSelf(std::ostream& os, itk::Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

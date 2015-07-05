@@ -24,7 +24,7 @@
 #include "otbStandardWriterWatcher.h"
 #include "otbStatisticsXMLFileReader.h"
 #include "otbShiftScaleVectorImageFilter.h"
-#include "otbImageClassificationProbabilitiesFilter.h"
+#include "otbImageClassificationProbabilityFilter.h"
 #include "otbMultiToMonoChannelExtractROI.h"
 #include "otbImageToVectorImageCastFilter.h"
 #include "otbMachineLearningModelFactory.h"
@@ -37,11 +37,11 @@ namespace otb
 namespace Wrapper
 {
 
-class ClassificationProbabilities : public Application
+class ClassificationProbabilitiy : public Application
 {
 public:
     /** Standard class typedefs. */
-    typedef ClassificationProbabilities            Self;
+    typedef ClassificationProbabilitiy            Self;
     typedef Application                   Superclass;
     typedef itk::SmartPointer<Self>       Pointer;
     typedef itk::SmartPointer<const Self> ConstPointer;
@@ -49,7 +49,7 @@ public:
     /** Standard macro */
     itkNewMacro ( Self );
 
-    itkTypeMacro ( ClassificationProbabilities, otb::Application );
+    itkTypeMacro ( ClassificationProbabilitiy, otb::Application );
 
     typedef float InternalPixelType ;
     typedef otb::Image<InternalPixelType>                ImageType;
@@ -60,12 +60,12 @@ public:
     typedef VectorImageType                                                                      OutputImageType;
     typedef UInt8ImageType                                                                       MaskImageType;
 
-    typedef otb::ImageClassificationProbabilitiesFilter<VectorImageType, OutputImageType, MaskImageType>      ClassificationFilterType;
-    typedef ClassificationFilterType::Pointer                                                    ClassificationFilterPointerType;
-    typedef ClassificationFilterType::ModelType                                                  ModelType;
+    typedef otb::ImageClassificationProbabilityFilter<VectorImageType, OutputImageType, MaskImageType>  ClassificationProbabilityFilterType;
+    typedef ClassificationProbabilityFilterType::Pointer                                                    ClassificationFilterPointerType;
+    typedef ClassificationProbabilityFilterType::ModelType                                                  ModelType;
     typedef ModelType::Pointer                                                                   ModelPointerType;
-    typedef ClassificationFilterType::ValueType                                                  ValueType;
-    typedef ClassificationFilterType::ProbabilityType                                                  ProbabilityType;
+    typedef ClassificationProbabilityFilterType::ValueType                                                  ValueType;
+    typedef ClassificationProbabilityFilterType::ProbabilityType                                                  ProbabilityType;
     typedef otb::MachineLearningModelFactory<ValueType, ProbabilityType>                               MachineLearningModelFactoryType;
 
     typedef otb::ListSampleGenerator<FloatVectorImageType, VectorDataType> ListSampleGeneratorType;
@@ -73,7 +73,7 @@ public:
 private:
   void DoInit()
   {
-	SetName("ClassificationProbabilities");
+	SetName("ClassificationProbabilitiy");
 	SetDescription("Compute Classification Probabilities of the input image according to a model file.");
 
         // Documentation
@@ -162,11 +162,11 @@ private:
 	
 	m_Model->SetNumberOfClasses( classSize );
         // Compute probabilities
-        m_ClassificationProbabilities = ClassificationFilterType::New();
-        m_ClassificationProbabilities->SetModel ( m_Model );
+        m_ClassificationProbability = ClassificationProbabilityFilterType::New();
+        m_ClassificationProbability->SetModel ( m_Model );
 
         otbAppLogINFO ( "Input image normalization deactivated." );
-        m_ClassificationProbabilities->SetInput ( inImage );
+        m_ClassificationProbability->SetInput ( inImage );
 
 	    
         if ( IsParameterEnabled ( "mask" ) )
@@ -175,13 +175,13 @@ private:
             // Load mask image and cast into LabeledImageType
             MaskImageType::Pointer inMask = GetParameterUInt8Image ( "mask" );
 
-            m_ClassificationProbabilities->SetInputMask ( inMask );
+            m_ClassificationProbability->SetInputMask ( inMask );
         }
 
-        SetParameterOutputImage<OutputImageType> ( "out", m_ClassificationProbabilities->GetOutput() );
+        SetParameterOutputImage<OutputImageType> ( "out", m_ClassificationProbability->GetOutput() );
     }
 
-    ClassificationFilterType::Pointer m_ClassificationProbabilities;
+    ClassificationProbabilityFilterType::Pointer m_ClassificationProbability;
     ModelPointerType m_Model;
 };
 
@@ -189,4 +189,4 @@ private:
 }
 }
 
-OTB_APPLICATION_EXPORT ( otb::Wrapper::ClassificationProbabilities )
+OTB_APPLICATION_EXPORT ( otb::Wrapper::ClassificationProbabilitiy )
