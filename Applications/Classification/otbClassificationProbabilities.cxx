@@ -64,20 +64,19 @@ public:
     typedef otb::MachineLearningModelFactory<ValueType, ProbabilityType>                               MachineLearningModelFactoryType;
 
 private:
-    void DoInit()
-    {
-        SetName ( "ClassificationProbabilities" );
-        SetDescription ( "Performs a classification of the input image according to a model file." );
+  void DoInit()
+  {
+	SetName("ClassificationProbabilities");
+	SetDescription("Compute Classification Probabilities of the input image according to a model file.");
 
         // Documentation
-        SetDocName ( "Image Classification" );
-        SetDocLongDescription ( "This application performs an image classification based on a model file produced by the TrainImagesClassifier application. Pixels of the output image will contain the class labels decided by the classifier (maximal class label = 65535). The input pixels can be optionally centered and reduced according to the statistics file produced by the ComputeImagesStatistics application. An optional input mask can be provided, in which case only input image pixels whose corresponding mask value is greater than 0 will be classified. The remaining of pixels will be given the label 0 in the output image." );
+        SetDocName ( "Classification Probabilities" );
+	SetDocLongDescription("This application Compute Classification Probability based on a model file produced by\
+			      the TrainImagesClassifier application.");
+    
 
-        SetDocLimitations ( "The input image must have the same type, order and number of bands than the images used to produce the statistics file and the SVM model file. If a statistics file was used during training by the TrainImagesClassifier, it is mandatory to use the same statistics file for classification. If an input mask is used, its size must match the input image size." );
-        SetDocAuthors ( "OTB-Team" );
-        SetDocSeeAlso ( "TrainImagesClassifier, ValidateImagesClassifier, ComputeImagesStatistics" );
-
-        AddDocTag ( Tags::Learning );
+	SetDocAuthors("Boussaffa Walid");
+	AddDocTag(Tags::Learning);
 
         AddParameter ( ParameterType_InputImage, "in",  "Input Image" );
         SetParameterDescription ( "in", "The input image to classify." );
@@ -85,24 +84,25 @@ private:
 	AddParameter ( ParameterType_Int, "nb",  "number of class" );
         SetParameterDescription ( "nb", "number of class." );
 	
-        AddParameter ( ParameterType_InputImage,  "mask",   "Input Mask" );
-        SetParameterDescription ( "mask", "The mask allows to restrict classification of the input image to the area where mask pixel values are greater than 0." );
-        MandatoryOff ( "mask" );
+	AddParameter(ParameterType_InputImage,  "mask",   "Input Mask");
+	SetParameterDescription( "mask", "The mask allows to restrict Probabilities computation of the input image\
+				to the area where mask pixel values are greater than 0.");
+	MandatoryOff("mask");
 
         AddParameter ( ParameterType_InputFilename, "model", "Model file" );
-        SetParameterDescription ( "model", "A model file (produced by TrainImagesClassifier application, maximal class label = 65535)." );
+        SetParameterDescription ( "model", "A model file (produced by TrainImagesClassifier application" );
 
         AddParameter ( ParameterType_OutputImage, "out",  "Output Image" );
-        SetParameterDescription ( "out", "Output image containing class labels" );
-        SetParameterOutputImagePixelType ( "out", ImagePixelType_uint8 );
+        SetParameterDescription ( "out", "Output image containing class probabilities" );
+        //SetParameterOutputImagePixelType ( "out", ImagePixelType_uint8 );
 
         AddRAMParameter();
 
         // Doc example parameter settings
-        SetDocExampleParameterValue ( "in", "QB_1_ortho.tif" );
-        SetDocExampleParameterValue ( "imstat", "EstimateImageStatisticsQB1.xml" );
-        SetDocExampleParameterValue ( "model", "clsvmModelQB1.svm" );
-        SetDocExampleParameterValue ( "out", "clLabeledImageQB1.tif" );
+	SetDocExampleParameterValue("in", "image.tif");
+	SetDocExampleParameterValue("model", "model.svm");
+	SetDocExampleParameterValue("vd", "shapefile.shp");
+	SetDocExampleParameterValue("out", "ProbabilitiesImage.tif");
     }
 
     void DoUpdateParameters()
@@ -153,7 +153,6 @@ private:
 
     ClassificationFilterType::Pointer m_ClassificationProbabilities;
     ModelPointerType m_Model;
-    //RescalerType::Pointer m_Rescaler;
 };
 
 
