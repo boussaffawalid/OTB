@@ -19,4 +19,5 @@ add_subdirectory(Rasterization)
 add_subdirectory(Segmentation)
 add_subdirectory(Test)
 add_subdirectory(Utils)
+add_subdirectory(FeatureSelection)
 

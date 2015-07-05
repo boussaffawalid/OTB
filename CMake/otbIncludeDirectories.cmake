@@ -44,6 +44,12 @@ set(OTB_INCLUDE_DIRS_BUILD_TREE ${OTB_INCLUDE_DIRS_BUILD_TREE}
   ${OTB_SOURCE_DIR}/Utilities/otbedison/prompt
   ${OTB_SOURCE_DIR}/Utilities/otbedison/edge
   ${OTB_SOURCE_DIR}/Utilities/otbconfigfile
+  ${OTB_SOURCE_DIR}/Utilities/FST3lib/_src_criteria
+  ${OTB_SOURCE_DIR}/Utilities/FST3lib/_src_dataio
+  ${OTB_SOURCE_DIR}/Utilities/FST3lib/_src_global
+  ${OTB_SOURCE_DIR}/Utilities/FST3lib/_src_search
+  ${OTB_SOURCE_DIR}/FeatureSUtilitieselection/FST3lib/_src_search
+  ${OTB_SOURCE_DIR}/Code/UtilitiesAdapters/FST3lib
 )
 
 if(OTB_USE_OPENCV)
