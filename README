@@ -2,11 +2,6 @@ README
 ======
 
 This is a fork of the ORFEO Toolbox repository
-The origianl repository can be found here https://github.com/echristophe/OTB
-
-Please see the Copyright directory for legal issues on the use of the software.
-
-Install information is available in the OTB Software Guide which can be downloaded from http://www.orfeo-toolbox.org.
 
 ------------------------------------------------------------
 
@@ -24,3 +19,11 @@ otbcli_ClassificationProbability -in image.tif -model model.svm -vd shapefile.sh
 
 Please feel free to contact me for any constructive comment or suggestion
 Boussaffa.walid@outlook.com
+
+------------------------------------------------------
+
+The origianl repository can be found here https://github.com/echristophe/OTB
+
+Please see the Copyright directory for legal issues on the use of the software.
+
+Install information is available in the OTB Software Guide which can be downloaded from http://www.orfeo-toolbox.org.
