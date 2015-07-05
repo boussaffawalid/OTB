@@ -102,12 +102,16 @@ typename LibSVMMachineLearningModel<TInputValue,TOutputValue>
 LibSVMMachineLearningModel<TInputValue,TOutputValue>
 ::GetProbability(const InputSampleType & input) const
 {
-  ProbabilitiesVectorType proba( this->GetNumberOfClasses() );
-
   MeasurementVectorFunctorType mfunctor;
-  proba = m_SVMestimator->GetModel()->EvaluateProbabilities(mfunctor(input));
-    
-  return proba;
+  
+  ProbabilitiesVectorType probaVector( this->GetNumberOfClasses() );
+  probaVector = m_SVMestimator->GetModel()->EvaluateProbabilities(mfunctor(input));
+
+  //WARNING this because Probabilities < 1
+  for(int i(0); i < this->GetNumberOfClasses(); i++)
+      probaVector[i]*=100;
+	  
+  return probaVector;
 }
 
 

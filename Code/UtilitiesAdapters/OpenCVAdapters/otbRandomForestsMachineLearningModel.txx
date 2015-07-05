@@ -132,27 +132,25 @@ typename RandomForestsMachineLearningModel<TInputValue,TOutputValue>
 RandomForestsMachineLearningModel<TInputValue,TOutputValue>
 ::GetProbability(const InputSampleType & value) const
 {
-//   std::cout << "start GetProbability" << std::endl;
-//   //convert listsample to Mat
-//   cv::Mat sample;
-//   otb::SampleToMat<InputSampleType>(value,sample);
-// 
-//   
-//   //calculate the probabilities from the number of votes that each class received
-//   //(prob = out_votes[class_index] / result ). 
-//   
-//   //class votes
-//   cv::AutoBuffer<int> out_votes ;
-//   int result = m_RFModel->predict_multi_class(sample, out_votes);
-//   int nbclass = m_RFModel->get_nclasses();
+   //convert listsample to Mat
+   cv::Mat sample;
+   otb::SampleToMat<InputSampleType>(value,sample);
+
+   //calculate the probabilities from the number of votes that each class received
+   //(prob = out_votes[class_index] / result ). 
+   
+   //classes votes
+   cv::AutoBuffer<int> out_votes ;
+   int result = m_RFModel->predict_multi_class(sample, out_votes);
   
-  ProbabilitiesVectorType  proba;
-/*  
-  for(unsigned int i(0); i< nbclass; ++i)
+   int nbrClass = this->GetNumberOfClasses() ;
+   ProbabilitiesVectorType  proba ( nbrClass );
+  
+  for(unsigned int i(0); i< nbrClass; ++i)
   {
-    int val = ( out_votes[i] / result ) ;
-    proba.SetElement(i, static_cast<TOutputValue>(val) ) ;
-  }*/
+    TargetValueType proba_i =  static_cast<TargetValueType>( (out_votes[i]*100) / result )  ;
+    proba.SetElement(i, proba_i ) ;
+  }
   
   return proba;
 }

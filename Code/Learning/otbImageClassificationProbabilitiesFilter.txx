@@ -64,13 +64,13 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
 {
     Superclass::GenerateOutputInformation();
     
-    int nbClass = this->GetModel()->GetNumberOfClasses()  ;
+    m_nbclass = this->GetModel()->GetNumberOfClasses()  ;
     
-    m_DefaultprobaVector =  itk::VariableLengthVector<ProbabilityType>( nbClass );
-    for(int i(0); i<nbClass; i++ )
+    m_DefaultprobaVector =  itk::VariableLengthVector<ProbabilityType>( m_nbclass );
+    for(int i(0); i<m_nbclass; i++ )
       m_DefaultprobaVector[i] = itk::NumericTraits<ProbabilityType>::ZeroValue();
 
-    this->GetOutput()->SetNumberOfComponentsPerPixel( nbClass );
+    this->GetOutput()->SetNumberOfComponentsPerPixel( m_nbclass );
 }
 
 
@@ -128,9 +128,10 @@ ImageClassificationProbabilitiesFilter<TInputImage, TOutputImage, TMaskImage>
     // If point is valid
     if (validPoint)
       {
-      // Classifify
-      //outIt.Set(m_Model->Predict(inIt.Get())[0]);
-	outIt.Set( m_DefaultprobaVector );
+	  // proba
+	  ProbabilityVectorType probaVector = itk::VariableLengthVector<ProbabilityType>( m_nbclass ) ;
+	  probaVector = m_Model->GetProbability( inIt.Get() );	  
+	  outIt.Set( probaVector );
       }
     else
       {

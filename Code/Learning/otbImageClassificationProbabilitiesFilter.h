@@ -116,6 +116,7 @@ private:
   ModelPointerType m_Model;
   /** Default label for invalid pixels (when using a mask) */
   ProbabilityVectorType m_DefaultprobaVector;
+  int m_nbclass;
 
 };
 } // End namespace otb
