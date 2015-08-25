@@ -1,7 +1,7 @@
 message(STATUS "Importing ITK...")
 
 # Use an external version of ITK by default except on windows (ITK is not packaged in OSGeo4W)
-set(DEFAULT_OTB_USE_EXTERNAL_ITK ON)
+set(DEFAULT_OTB_USE_EXTERNAL_ITK OFF)
 if(WIN32)
    set(DEFAULT_OTB_USE_EXTERNAL_ITK OFF)
 endif()
