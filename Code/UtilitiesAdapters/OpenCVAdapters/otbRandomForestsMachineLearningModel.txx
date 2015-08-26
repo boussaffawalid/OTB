@@ -141,14 +141,14 @@ RandomForestsMachineLearningModel<TInputValue,TOutputValue>
    
    //classes votes
    cv::AutoBuffer<int> out_votes ;
-   int result = m_RFModel->predict_multi_class(sample, out_votes);
+   int nbTree = m_RFModel->predict_multi_class(sample, out_votes);
   
    int nbrClass = this->GetNumberOfClasses() ;
    ProbabilitiesVectorType  proba ( nbrClass );
   
   for(unsigned int i(0); i< nbrClass; ++i)
   {
-    TargetValueType proba_i =  static_cast<TargetValueType>( (out_votes[i]*100) / result )  ;
+    TargetValueType proba_i =  static_cast<TargetValueType>( (out_votes[i]*100) / nbTree )  ;
     proba.SetElement(i, proba_i ) ;
   }
   

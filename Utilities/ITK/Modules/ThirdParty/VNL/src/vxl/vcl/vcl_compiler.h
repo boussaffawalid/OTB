@@ -119,7 +119,7 @@
 #  else
 #   define VCL_GCC_30
 #  endif
-# elif (__GNUC__==4)
+# elif (__GNUC__==4 || __GNUC__==5 ) // dirty fix to add support to gnu 5.
 #  define VCL_GCC_4
 #  if (__GNUC_MINOR__ > 0 )
 #   define VCL_GCC_41

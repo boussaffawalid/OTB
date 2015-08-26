@@ -37,11 +37,11 @@ namespace otb
 namespace Wrapper
 {
 
-class ClassificationProbabilitiy : public Application
+class ClassificationProbability : public Application
 {
 public:
     /** Standard class typedefs. */
-    typedef ClassificationProbabilitiy            Self;
+    typedef ClassificationProbability            Self;
     typedef Application                   Superclass;
     typedef itk::SmartPointer<Self>       Pointer;
     typedef itk::SmartPointer<const Self> ConstPointer;
@@ -49,7 +49,7 @@ public:
     /** Standard macro */
     itkNewMacro ( Self );
 
-    itkTypeMacro ( ClassificationProbabilitiy, otb::Application );
+    itkTypeMacro ( ClassificationProbability, otb::Application );
 
     typedef float InternalPixelType ;
     typedef otb::Image<InternalPixelType>                ImageType;
@@ -73,7 +73,7 @@ public:
 private:
   void DoInit()
   {
-	SetName("ClassificationProbabilitiy");
+	SetName("ClassificationProbability");
 	SetDescription("Compute Classification Probabilities of the input image according to a model file.");
 
         // Documentation
@@ -189,4 +189,4 @@ private:
 }
 }
 
-OTB_APPLICATION_EXPORT ( otb::Wrapper::ClassificationProbabilitiy )
+OTB_APPLICATION_EXPORT ( otb::Wrapper::ClassificationProbability )
