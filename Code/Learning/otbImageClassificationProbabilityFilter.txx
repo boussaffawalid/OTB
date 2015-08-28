@@ -134,6 +134,20 @@ ImageClassificationProbabilityFilter<TInputImage, TOutputImage, TMaskImage>
 	  // proba
 	  ProbabilityVectorType probaVector = itk::VariableLengthVector<ProbabilityType>( m_nbclass ) ;
 	  probaVector = m_Model->GetProbability( inIt.Get() );	  
+	  
+// 	    int band = 0 ;
+// 	    double oldValue =	  probaVector[0] ;
+// 	  for( int i(0); i< m_nbclass;i++)
+// 	  {
+// 	    if( probaVector[i] >= oldValue)
+// 	    {
+// 	     double oldValue = probaVector[i] ;
+// 	     band = i ;
+// 	    }
+// 	  }
+// 	  std::cout<< " " << band << " -> " << oldValue; 
+// 	  std::cout<<std::endl;
+	  
 	  outIt.Set( probaVector );
       }
     else

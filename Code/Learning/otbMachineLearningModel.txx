@@ -83,8 +83,8 @@ MachineLearningModel<TInputValue,TOutputValue>
 ::GetProbability(const InputSampleType& input) const
 {
   ProbabilitiesVectorType proba(m_nbclass);
-  //proba.Fill(0);
-  //TODO set proba element to 0
+  for(unsigned int i(0); i< m_nbclass; i++)
+    proba[i] = -1;
   return proba;
 }
 
